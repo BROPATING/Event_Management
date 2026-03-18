@@ -1,0 +1,1 @@
+SELECT id, name, availableSeats, eventId FROM tier;

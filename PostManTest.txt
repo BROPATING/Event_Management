@@ -1,0 +1,49 @@
+http://localhost:3000/auth/register
+{
+  "name": "John Doe",
+  "email": "john@example2.com",
+  "password": "password123"
+}
+
+http://localhost:3000/auth/login
+
+{
+  "email": "john@example2.com",
+  "password": "password123"
+}
+
+Create Event — POST http://localhost:3000/events
+{
+  "title": "Tech Summit 2025",
+  "description": "Annual tech conference",
+  "venue": "Convention Center",
+  "city": "Mumbai",
+  "startDate": "2025-01-15T09:00:00.000Z",
+  "endDate": "2025-01-15T18:00:00.000Z"
+}
+
+Get All Events — GET http://localhost:3000/events
+Update Event — PUT http://localhost:3000/events/1
+{
+  "status": "published"
+}
+
+Add Tier — POST http://localhost:3000/events/1/tiers
+json{
+  "name": "General Admission",
+  "price": 999,
+  "totalCapacity": 100
+}
+
+Add VIP Tier — POST http://localhost:3000/events/1/tiers
+json{
+  "name": "VIP",
+  "price": 2999,
+  "totalCapacity": 20
+}
+
+Create Booking — POST http://localhost:3000/bookings
+json{
+  "tierId": 1,
+  "quantity": 2
+}
