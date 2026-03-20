@@ -3,6 +3,20 @@ import { AppDataSource } from "../data-source";
 import { Tier } from "../entities/Tier";
 import { Event } from "../entities/Event";
 
+/**
+ * @file TierController.ts
+ * @description Handles CRUD operations for Event Ticket Tiers.
+ * * BUSINESS RULES:
+ * 1. Only the Event Organizer (userId) can Create, Update, or Delete tiers.
+ * 2. Tiers cannot be Edited or Deleted if bookings (tickets sold) already exist.
+ * 3. availableSeats is automatically synced with totalCapacity on creation.
+ * * ROUTES:
+ * - POST   /events/:id/tiers       -> createTier
+ * - GET    /events/:id/tiers       -> getTiers
+ * - PUT    /events/:id/tiers/:id   -> updateTier
+ * - DELETE /events/:id/tiers/:id   -> deleteTier
+ */
+
 const tierRepo = AppDataSource.getRepository(Tier);
 const eventRepo = AppDataSource.getRepository(Event);
 

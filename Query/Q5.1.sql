@@ -1,1 +1,0 @@
-SELECT COUNT(*) as totalTiers FROM tier;

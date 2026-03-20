@@ -1,8 +1,38 @@
+/**
+ * @file AuthController.ts
+ * @description Manages User Registration, Password Security, and JWT Generation.
+ * * SECURITY PROTOCOLS:
+ * 1. Password Hashing: Uses bcrypt with a salt round of 10. Never store raw passwords.
+ * 2. Uniqueness: Email is used as the primary identifier; checked before registration.
+ * 3. JWT Strategy: Tokens are signed with a 7-day expiration (expiresIn: "7d").
+ * 4. Error Masking: Login uses generic "Invalid credentials" for both email/password failures to prevent user enumeration.
+ * * FLOW:
+ * - Register: Email Check -> Hash -> Save -> 201.
+ * - Login: Find User -> Hash Comparison -> Sign Token -> 200.
+ */
+
 import { Request, Response, NextFunction } from "express";
 import { AppDataSource } from "../data-source";
 import { User } from "../entities/User";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+
+/**
+ * REGISTER:
+User sends name + email + password
+→ Check email not taken
+→ Hash the password
+→ Save to database
+→ Return 201 success
+
+LOGIN:
+User sends email + password
+→ Find user by email
+→ Compare password with stored hash
+→ If match → create JWT token
+→ Return token to user
+→ User uses token for all future requests
+ */
 
 const userRepo = AppDataSource.getRepository(User);
 

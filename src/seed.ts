@@ -21,11 +21,11 @@ async function seed() {
   const userRepo = AppDataSource.getRepository(User);
 
   const users = await userRepo.save([
-    { name: "Alice Organizer", email: "alice@example.com", passwordHash: await bcrypt.hash("password123", 10) },
-    { name: "Bob Organizer",   email: "bob@example.com",   passwordHash: await bcrypt.hash("password123", 10) },
-    { name: "Charlie User",    email: "charlie@example.com", passwordHash: await bcrypt.hash("password123", 10) },
-    { name: "Diana User",      email: "diana@example.com",   passwordHash: await bcrypt.hash("password123", 10) },
-    { name: "Eve User",        email: "eve@example.com",     passwordHash: await bcrypt.hash("password123", 10) },
+    { name: "Ved Organizer", email: "Ved@example.com", passwordHash: await bcrypt.hash("password123", 10) },
+    { name: "Kiro Organizer",   email: "Kiro@example.com",   passwordHash: await bcrypt.hash("password123", 10) },
+    { name: "Ikjot User",    email: "Ikjot@example.com", passwordHash: await bcrypt.hash("password123", 10) },
+    { name: "Sanya User",      email: "Sanya@example.com",   passwordHash: await bcrypt.hash("password123", 10) },
+    { name: "Dolly User",        email: "Dolly@example.com",     passwordHash: await bcrypt.hash("password123", 10) },
   ]);
 
   console.log("✅ Users seeded");
