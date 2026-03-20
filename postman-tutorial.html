@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Postman Tutorial — Collections, Folders, Variables &amp; Scripts</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #24292e;
+      background-color: #ffffff;
+      padding: 0 20px;
+      margin: 0 auto;
+      max-width: 980px;
+      word-wrap: break-word;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.25;
+      margin-top: 24px;
+      margin-bottom: 16px;
+    }
+    h1 { font-size: 2em; padding-bottom: 0.3em; border-bottom: 1px solid #eaecef; }
+    h2 { font-size: 1.5em; padding-bottom: 0.3em; border-bottom: 1px solid #eaecef; }
+    h3 { font-size: 1.25em; }
+    h4 { font-size: 1em; }
+    p { margin-top: 0; margin-bottom: 16px; }
+    a { color: #0366d6; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    ul, ol { padding-left: 2em; margin-top: 0; margin-bottom: 16px; }
+    li + li { margin-top: 0.25em; }
+    code {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      font-size: 85%;
+      background-color: rgba(27, 31, 35, 0.05);
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+    }
+    pre {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      font-size: 85%;
+      line-height: 1.45;
+      background-color: #f6f8fa;
+      border-radius: 3px;
+      padding: 16px;
+      overflow: auto;
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+    pre code { background-color: transparent; padding: 0; font-size: 100%; }
+    blockquote {
+      padding: 0 1em;
+      color: #6a737d;
+      border-left: 0.25em solid #dfe2e5;
+      margin: 0 0 16px 0;
+    }
+    table {
+      border-spacing: 0;
+      border-collapse: collapse;
+      margin-top: 0;
+      margin-bottom: 16px;
+      width: 100%;
+    }
+    table th {
+      font-weight: 600;
+      padding: 6px 13px;
+      border: 1px solid #dfe2e5;
+      background-color: #f6f8fa;
+    }
+    table td { padding: 6px 13px; border: 1px solid #dfe2e5; }
+    table tr { background-color: #ffffff; border-top: 1px solid #c6cbd1; }
+    table tr:nth-child(2n) { background-color: #f6f8fa; }
+    hr { height: 0.25em; padding: 0; margin: 24px 0; background-color: #e1e4e8; border: 0; }
+    strong { font-weight: 600; }
+    em { font-style: italic; }
+    mark { background-color: #fff3cd; padding: 0.2em 0.4em; }
+
+    /* Callouts */
+    .callout {
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      border-left: 4px solid;
+    }
+    .callout-info    { background: #eff6ff; border-color: #3b82f6; color: #1e3a5f; }
+    .callout-warn    { background: #fffbeb; border-color: #f59e0b; color: #78350f; }
+    .callout-success { background: #f0fdf4; border-color: #22c55e; color: #14532d; }
+    .callout-danger  { background: #fff1f2; border-color: #f43f5e; color: #881337; }
+    .callout strong  { display: block; margin-bottom: 4px; }
+
+    /* Step blocks */
+    .steps { list-style: none; padding-left: 0; counter-reset: step-counter; }
+    .steps li {
+      counter-increment: step-counter;
+      position: relative;
+      padding: 12px 16px 12px 52px;
+      margin-bottom: 10px;
+      background: #f6f8fa;
+      border: 1px solid #e1e4e8;
+      border-radius: 6px;
+    }
+    .steps li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 14px;
+      top: 12px;
+      background: #24292e;
+      color: #fff;
+      font-weight: 700;
+      font-size: 12px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 22px;
+      text-align: center;
+    }
+    .steps li p { margin: 0; }
+    .steps li p + p { margin-top: 6px; }
+
+    /* UI element labels — mimic actual Postman buttons/tabs */
+    .ui {
+      display: inline-block;
+      background: #e8eaed;
+      color: #24292e;
+      border: 1px solid #c6cbd1;
+      border-radius: 4px;
+      padding: 1px 7px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    }
+
+    /* Concept definition cards */
+    .concept-card {
+      border: 1px solid #dfe2e5;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .concept-card-header {
+      background: #f6f8fa;
+      padding: 8px 14px;
+      font-weight: 700;
+      font-size: 13px;
+      border-bottom: 1px solid #dfe2e5;
+    }
+    .concept-card-body {
+      padding: 12px 14px;
+    }
+    .concept-card-body p { margin-bottom: 8px; }
+    .concept-card-body p:last-child { margin-bottom: 0; }
+
+    /* Section number badge */
+    .section-num {
+      display: inline-block;
+      background: #24292e;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 4px;
+      padding: 1px 8px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    .output-box {
+      background-color: #f9f9f9;
+      border: 2px solid #ddd;
+      border-left: 4px solid #4CAF50;
+      padding: 15px;
+      margin: 16px 0;
+      border-radius: 4px;
+      white-space: pre-wrap;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      font-size: 85%;
+    }
+    .output-box::before {
+      content: "Output:";
+      display: block;
+      font-weight: 600;
+      color: #4CAF50;
+      margin-bottom: 10px;
+      font-size: 0.9em;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+<h1>📮 Postman Tutorial</h1>
+<h2 style="border:none; margin-top:0; color:#6a737d; font-size:1em; font-weight:400;">
+  Folders · Variables · Scripts · Export — everything you need for your submission
+</h2>
+
+<div class="callout callout-info">
+  <strong>📌 Who this is for</strong>
+  This tutorial assumes you already know how to open Postman, create a Collection, and send a basic GET or POST request.
+  Everything beyond that is covered here from scratch.
+</div>
+
+<p>By the end of this document you will be able to:</p>
+<ul>
+  <li>Organise requests into <strong>folders</strong> inside a collection</li>
+  <li>Understand what <strong>variables</strong> are and create them at the collection level</li>
+  <li>Use variables inside your request URLs and headers with the <code>{{variableName}}</code> syntax</li>
+  <li>Write a simple <strong>Post-response script</strong> that saves your JWT token automatically after login</li>
+  <li><strong>Export</strong> your collection as a <code>.json</code> file ready for submission</li>
+</ul>
+
+<hr/>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">1</span> Folders — Organising Requests</h2>
+
+<h3>What is a folder?</h3>
+<p>
+  A <strong>folder</strong> (Postman calls them <em>folders</em> or <em>groups</em>) is just a named container
+  that sits inside a collection. Think of it like a subfolder on your desktop.
+  Instead of having 20 requests all jumbled together, you group them by feature:
+  all auth requests in one folder, all event requests in another, and so on.
+</p>
+
+<div class="concept-card">
+  <div class="concept-card-header">Example structure for this project</div>
+  <div class="concept-card-body">
+    <pre style="margin:0;">📁 Evently API  ← your Collection
+  📂 Auth
+      POST  /auth/register
+      POST  /auth/login
+  📂 Events
+      GET   /events
+      POST  /events
+      PUT   /events/:id
+      ...
+  📂 Tiers
+      POST  /events/:id/tiers
+      ...
+  📂 Bookings
+      POST  /bookings
+      ...
+  📂 Reports
+      GET   /reports/revenue       ← Q1
+      GET   /reports/cities        ← Q2
+      ...</pre>
+  </div>
+</div>
+
+<h3>How to create a folder</h3>
+
+<ol class="steps">
+  <li>
+    <p>In the left sidebar, find your collection. <strong>Hover</strong> over its name — three dots <strong>(⋯)</strong> appear to the right of it.</p>
+  </li>
+  <li>
+    <p>Click the <strong>(⋯)</strong> menu and choose <span class="ui">Add folder</span>.</p>
+  </li>
+  <li>
+    <p>A new folder appears inside your collection. Type its name — e.g. <code>Auth</code> — and press <kbd>Enter</kbd>.</p>
+  </li>
+  <li>
+    <p>Repeat for every group: <code>Events</code>, <code>Tiers</code>, <code>Bookings</code>, <code>Reports</code>.</p>
+  </li>
+</ol>
+
+<h3>How to add a request into a folder</h3>
+
+<ol class="steps">
+  <li>
+    <p>Hover over the <strong>folder name</strong> (not the collection). The <strong>(⋯)</strong> appears again.</p>
+  </li>
+  <li>
+    <p>Click <strong>(⋯)</strong> → <span class="ui">Add request</span>. A new blank request appears <em>inside</em> that folder.</p>
+  </li>
+  <li>
+    <p>Name the request clearly — e.g. <code>Register User</code> or <code>Q1 — Total Revenue Jan 2025</code>.</p>
+  </li>
+</ol>
+
+<div class="callout callout-warn">
+  <strong>⚠️ Moving existing requests</strong>
+  If you already created requests outside any folder, you can drag and drop them into a folder directly in the sidebar.
+  Just click and hold the request, then drag it on top of the folder name until the folder highlights, then release.
+</div>
+
+<hr/>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">2</span> Variables — Stop Copy-Pasting</h2>
+
+<h3>What is a variable?</h3>
+<p>
+  A variable is a <strong>named placeholder</strong> that stores a value you want to reuse across many requests.
+  Instead of typing <code>http://localhost:3000</code> in every single request URL, you store it once
+  in a variable called <code>baseUrl</code>, and then every request just references <code>{{baseUrl}}</code>.
+</p>
+<p>
+  If you ever change your server port, you update it in <strong>one place</strong> and every request updates automatically.
+</p>
+
+<div class="concept-card">
+  <div class="concept-card-header">The two variables you need for this project</div>
+  <div class="concept-card-body">
+    <table style="margin-bottom:0;">
+      <thead>
+        <tr><th>Variable name</th><th>Value</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>baseUrl</code></td><td><code>http://localhost:3000</code></td><td>Your server's base address — used in every URL</td></tr>
+        <tr><td><code>token</code></td><td><em>(filled automatically by script)</em></td><td>The JWT returned after login — used in auth headers</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<h3>Variable scopes — where does a variable live?</h3>
+<p>Postman has several places where variables can be stored. The most important ones are:</p>
+
+<table>
+  <thead><tr><th>Scope</th><th>Where it's set</th><th>When to use it</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Global</strong></td>
+      <td>Postman app settings</td>
+      <td>Rarely — shared across all collections</td>
+    </tr>
+    <tr>
+      <td><strong>Collection</strong></td>
+      <td>Your collection's Variables tab</td>
+      <td>✅ <strong>Use this</strong> — scoped to your project only</td>
+    </tr>
+    <tr>
+      <td><strong>Environment</strong></td>
+      <td>A named Environment (e.g. "Dev", "Prod")</td>
+      <td>Useful for switching between servers; not needed here</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>For this project, use <strong>Collection variables</strong> — they travel with the collection when you export it, which is exactly what you want for submission.</p>
+
+<h3>How to create collection variables</h3>
+
+<ol class="steps">
+  <li>
+    <p>Click on your <strong>collection name</strong> in the sidebar (not a folder, the root collection). The collection overview opens in the main panel.</p>
+  </li>
+  <li>
+    <p>Click the <span class="ui">Variables</span> tab at the top of the panel (you'll see tabs like Overview, Authorization, Pre-request Script, Tests, Variables).</p>
+  </li>
+  <li>
+    <p>You'll see a table with two columns: <strong>Variable</strong> and <strong>Initial Value</strong> (and Current Value).</p>
+  </li>
+  <li>
+    <p>Click the empty row under <strong>Variable</strong> and type <code>baseUrl</code>. Then click under <strong>Initial Value</strong> and type <code>http://localhost:3000</code>. Press <kbd>Tab</kbd> — the Current Value fills in automatically.</p>
+  </li>
+  <li>
+    <p>Click the next empty row. Add a second variable: name it <code>token</code>, leave its value <strong>blank</strong> for now — it will be filled in by a script after you log in.</p>
+  </li>
+  <li>
+    <p>Click <span class="ui">Save</span> (<kbd>Ctrl+S</kbd> / <kbd>Cmd+S</kbd>).</p>
+  </li>
+</ol>
+
+<div class="callout callout-info">
+  <strong>📌 Initial Value vs Current Value</strong>
+  <strong>Initial Value</strong> is what gets exported with the collection — anyone who imports your collection sees this.
+  <strong>Current Value</strong> is what Postman actually uses when sending requests on your machine. They start the same,
+  but scripts (Section 3) update only the Current Value at runtime.
+  Never put a real secret in Initial Value — it will be in the exported file.
+</div>
+
+<h3>How to use a variable in a request</h3>
+
+<p>
+  Anywhere in Postman — a URL, a header value, a body field — you reference a variable by wrapping its name in
+  double curly braces: <code>{{variableName}}</code>.
+</p>
+
+<p><strong>Example — using <code>baseUrl</code> in a URL:</strong></p>
+
+<div class="concept-card">
+  <div class="concept-card-header">Instead of this…</div>
+  <div class="concept-card-body">
+    <code>http://localhost:3000/auth/login</code>
+  </div>
+</div>
+
+<div class="concept-card">
+  <div class="concept-card-header">Write this</div>
+  <div class="concept-card-body">
+    <code>{{baseUrl}}/auth/login</code>
+  </div>
+</div>
+
+<p>Postman highlights variable names in <span style="color:#e67e22; font-weight:600;">orange</span> when it recognises them. If the variable name stays dark/red, check your spelling.</p>
+
+<p><strong>Example — using <code>token</code> in the Authorization header:</strong></p>
+
+<ol class="steps">
+  <li>
+    <p>Open any protected request (e.g. <code>GET /events</code>).</p>
+  </li>
+  <li>
+    <p>Click the <span class="ui">Headers</span> tab.</p>
+  </li>
+  <li>
+    <p>Add a new header row:</p>
+    <p><strong>Key:</strong> <code>Authorization</code> &nbsp;&nbsp; <strong>Value:</strong> <code>Bearer {{token}}</code></p>
+  </li>
+</ol>
+
+<p>
+  That's it. Once the token variable has a value (set by the login script in Section 3),
+  every request using <code>Bearer {{token}}</code> will automatically send the correct JWT.
+</p>
+
+<hr/>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">3</span> Scripts — Saving the JWT Automatically</h2>
+
+<h3>What is a Post-response script?</h3>
+<p>
+  A <strong>Post-response script</strong> (also called a <em>Test script</em> in older Postman versions) is
+  a small piece of JavaScript that Postman runs <em>after</em> it receives a response.
+  You can use it to read data from the response and store it somewhere — like saving the JWT token
+  into a collection variable so all your other requests can use it automatically.
+</p>
+
+<p>Without this script, you would have to:</p>
+<ol>
+  <li>Send the login request.</li>
+  <li>Copy the token from the response body.</li>
+  <li>Manually paste it into every other request's Authorization header.</li>
+  <li>Repeat every time the token expires.</li>
+</ol>
+<p>With the script, step 1 is all you need. Postman handles the rest.</p>
+
+<h3>How to add the script to your Login request</h3>
+
+<ol class="steps">
+  <li>
+    <p>Open your <code>POST /auth/login</code> request.</p>
+  </li>
+  <li>
+    <p>Click the <span class="ui">Scripts</span> tab at the top of the request panel.</p>
+    <p>You will see two sub-tabs: <span class="ui">Pre-request</span> and <span class="ui">Post-response</span>. Click <span class="ui">Post-response</span>.</p>
+  </li>
+  <li>
+    <p>You'll see an empty code editor. Paste the following code exactly as written:</p>
+  </li>
+</ol>
+
+<pre><code>const res = pm.response.json();
+
+if (res.token) {
+    pm.collectionVariables.set("token", res.token);
+    console.log("✅ Token saved:", res.token);
+} else {
+    console.warn("⚠️ No token found in response. Check your login endpoint.");
+}</code></pre>
+
+<ol class="steps" start="4">
+  <li>
+    <p>Press <kbd>Ctrl+S</kbd> / <kbd>Cmd+S</kbd> to save.</p>
+  </li>
+  <li>
+    <p>Send a login request with valid credentials. In the response, click <span class="ui">Console</span> at the bottom of the Postman window — you should see <code>✅ Token saved: eyJ...</code></p>
+  </li>
+  <li>
+    <p>Go back to your collection's <span class="ui">Variables</span> tab. The <strong>Current Value</strong> of <code>token</code> should now show the JWT string. Leave <strong>Initial Value</strong> blank.</p>
+  </li>
+</ol>
+
+<div class="callout callout-success">
+  <strong>✅ You're done</strong>
+  Every request in your collection that uses <code>Bearer {{token}}</code> in its Authorization header
+  will now automatically use the fresh token from your last login — no manual work needed.
+</div>
+
+<h3>Understanding the script line by line</h3>
+
+<table>
+  <thead><tr><th>Line</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>pm.response.json()</code></td>
+      <td>Parses the response body as JSON and returns it as a JavaScript object</td>
+    </tr>
+    <tr>
+      <td><code>res.token</code></td>
+      <td>Reads the <code>token</code> field from that object — adjust this if your API returns <code>res.accessToken</code> or similar</td>
+    </tr>
+    <tr>
+      <td><code>pm.collectionVariables.set("token", res.token)</code></td>
+      <td>Stores the value into the collection variable named <code>token</code></td>
+    </tr>
+    <tr>
+      <td><code>console.log(...)</code></td>
+      <td>Prints to the Postman Console (bottom bar) — useful for debugging</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout callout-warn">
+  <strong>⚠️ If your API returns a different field name</strong>
+  If your login endpoint returns <code>{ "accessToken": "eyJ..." }</code> instead of <code>{ "token": "eyJ..." }</code>,
+  change <code>res.token</code> to <code>res.accessToken</code> in the script. Match whatever your API actually returns.
+</div>
+
+<hr/>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">4</span> Full Request Checklist</h2>
+
+<p>Before moving on, verify every request in your collection follows these rules:</p>
+
+<ul>
+  <li><input type="checkbox" disabled> URL uses <code>{{baseUrl}}</code> — e.g. <code>{{baseUrl}}/events</code></li>
+  <li><input type="checkbox" disabled> All protected requests have <code>Authorization: Bearer {{token}}</code> in their Headers tab</li>
+  <li><input type="checkbox" disabled> POST / PUT requests have a JSON body with realistic example data (not empty)</li>
+  <li><input type="checkbox" disabled> Report requests (Q1–Q13) are named clearly with the question number</li>
+  <li><input type="checkbox" disabled> The Login request has the Post-response script added</li>
+  <li><input type="checkbox" disabled> Sending Login first, then any protected request, works without errors</li>
+</ul>
+
+<hr/>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">5</span> Exporting Your Collection</h2>
+
+<p>
+  Exporting produces a single <code>.json</code> file that contains your entire collection —
+  all folders, requests, variables, and scripts. This is what you submit.
+</p>
+
+<ol class="steps">
+  <li>
+    <p>In the sidebar, <strong>hover</strong> over your collection name. Click the <strong>(⋯)</strong> three-dot menu.</p>
+  </li>
+  <li>
+    <p>Choose <span class="ui">Export</span> from the dropdown.</p>
+  </li>
+  <li>
+    <p>A dialog appears asking which format to use. Select <strong>Collection v2.1</strong> (this is the modern standard — always use this).</p>
+  </li>
+  <li>
+    <p>Click <span class="ui">Export</span>. A file save dialog opens.</p>
+  </li>
+  <li>
+    <p>Save the file as <code>evently-collection.json</code>. Remember where you saved it.</p>
+  </li>
+  <li>
+    <p>Submit this file together with your GitHub repository link.</p>
+  </li>
+</ol>
+
+<div class="callout callout-info">
+  <strong>📌 What gets exported — and what doesn't</strong>
+  The export includes: all requests, folders, headers, body examples, scripts, and variable <em>Initial Values</em>.
+  It does <strong>not</strong> include <em>Current Values</em> of variables (those are local to your machine).
+  This is why the <code>token</code> variable's Initial Value should remain blank — its value is generated at runtime by the script.
+</div>
+
+<hr/>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">6</span> Running the Whole Collection (Sanity Check)</h2>
+
+<p>
+  The <strong>Collection Runner</strong> lets you run every request in your collection in sequence,
+  automatically, with one click. Use this to check that everything works before submitting.
+</p>
+
+<ol class="steps">
+  <li>
+    <p>Click on your collection name in the sidebar to open the collection overview.</p>
+  </li>
+  <li>
+    <p>Click the <span class="ui">▶ Run</span> button near the top right of the panel.</p>
+  </li>
+  <li>
+    <p>The Collection Runner opens. Make sure your requests are ordered logically:
+    <code>Register</code> → <code>Login</code> → everything else. You can drag requests to reorder them here.</p>
+  </li>
+  <li>
+    <p>Click <span class="ui">Run Evently API</span> (or whatever your collection is named).</p>
+  </li>
+  <li>
+    <p>Postman runs each request one by one. You will see a green ✅ or red ❌ next to each one.</p>
+  </li>
+  <li>
+    <p>Fix any red requests before exporting and submitting.</p>
+  </li>
+</ol>
+
+<div class="callout callout-warn">
+  <strong>⚠️ Order matters in the Runner</strong>
+  The Login request must run <em>before</em> any protected request, because the script on Login is what
+  populates the <code>token</code> variable. If you run a protected request first, the token will be empty and you'll get a 401.
+</div>
+
+<hr/>
+
+<p style="color:#6a737d; font-size:12px; text-align:center;">
+  Postman Tutorial &nbsp;·&nbsp; Module 4 Supplement &nbsp;·&nbsp; Folders · Variables · Scripts · Export
+</p>
+
+</body>
+</html>

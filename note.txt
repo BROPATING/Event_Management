@@ -1,0 +1,92 @@
+Flow
+npm run dev
+     ↓
+index.ts runs
+     ↓
+dotenv.config() → loads .env secrets
+     ↓
+AppDataSource.initialize() → connects to evently.db
+     ↓ (success)
+console.log("Database connected")
+     ↓
+app.listen(3000) → server starts
+     ↓
+console.log("Server running on port 3000")
+     ↓
+Ready to accept requests from Postman
+
+data-source.ts
+    file that tells TypeORM how to connect to your database.
+
+index.ts 
+    When you run npm run dev this is the first file that executes. It does two things in order:
+    Uses app from app.ts 
+
+app.ts
+    Contains the request 
+    Ex. Think of it as the reception desk of a hotel. Every request that comes in gets directed to the right room (route). 
+    It also has security (middleware) and a complaints desk (error handler).
+    /auth     → Floor 1 → handles register, login
+    /events   → Floor 2 → handles create, get, update, cancel events
+    /events   → Floor 2 → also handles tiers (same floor, different rooms)
+    /bookings → Floor 3 → handles create, view, cancel bookings
+    /reports  → Floor 4 → handles all 13 analytical queries
+
+auth.controller.ts
+    this is where register and login logic lives.
+    Request → Route → Controller → Database → Response
+
+auth.middleware.ts
+    Think of it as a bouncer at a club. Every request trying to access a protected route must show 
+    their token (ID card). 
+
+error.middleware.ts
+    No matter where an error happens in your app — auth, events, bookings, reports — it always falls down to this one 
+    place which sends a clean response back to the client.
+    | Code | Meaning | Used when |
+    |---|---|---|
+    | `200` | OK | Successful GET request |
+    | `201` | Created | New resource created |
+    | `400` | Bad Request | Invalid input or business rule violation |
+    | `401` | Unauthorized | No token or invalid token |
+    | `403` | Forbidden | Valid token but wrong permissions |
+    | `404` | Not Found | Resource doesn't exist |
+    | `409` | Conflict | Email already in use |
+    | `500` | Internal Server Error | Unexpected crash |
+
+Summary — Your middleware chain
+
+Every request passes through:
+
+1. express.json()    → parse body
+2. authMiddleware    → verify token (protected routes only)
+3. controller        → business logic
+4. errorMiddleware   → catch any errors (last resort)
+    
+event.controller.ts
+    We perform CRUD operation 
+    C → Create  → POST   /events
+    R → Read    → GET    /events and /events/:id
+    U → Update  → PUT    /events/:id
+    D → Delete  → DELETE /events/:id (cancel)
+
+booking.controller.ts
+    this is the most important controller because it uses transactions.
+    Bookings involve two database operations that must happen together:
+    1. Deduct seats from tier    (update tier)
+    2. Create booking record     (insert booking)
+    If operation 1 succeeds but operation 2 fails — seats are deducted but no booking exists. 
+    That's a data corruption bug. Transactions solve this.
+
+report.controller.ts
+    this is where all 13 analytical queries live using createQueryBuilder.
+
+tier.controller.ts
+     this handles all tier CRUD operations with organizer guards and booking protection.
+     Tech Summit 2025
+    ├── General Admission → price: 999,  capacity: 100
+    ├── VIP               → price: 2999, capacity: 20
+    └── Early Bird        → price: 599,  capacity: 50
+
+
+
